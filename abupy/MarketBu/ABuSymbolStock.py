@@ -298,7 +298,6 @@ class AbuSymbolUS(AbuSymbolStockBase):
         查询股票所在的子市场，即交易所信息, 美股市场默认返回纽交所
         :return: 返回EMarketSubType.value值，即子市场（交易所）字符串对象
         """
-
         if code in self:
             return self[code].exchange.values[0].upper()
         return default
