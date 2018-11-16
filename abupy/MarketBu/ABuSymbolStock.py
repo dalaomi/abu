@@ -375,7 +375,6 @@ def query_stock_info(symbol):
     """
     if isinstance(symbol, six.string_types):
         symbol = code_to_symbol(symbol)
-
     if symbol.is_a_stock():
         sn = AbuSymbolCN()
     elif symbol.is_hk_stock():

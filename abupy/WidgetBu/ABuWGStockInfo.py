@@ -29,7 +29,6 @@ class WidgetSearchStockInfo(WidgetBase):
 
     def on_search_result_click(self, select):
         """选中搜索结果中的一个进行点击"""
-
         st_symbol = [symbol.split(':')[1] if symbol.find(':') > 0
                      else symbol for symbol in list(select['new'])]
         if len(st_symbol) == 0:
