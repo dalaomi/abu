@@ -1,21 +1,32 @@
-class Foo(object):
-    @staticmethod
-    def bar(self):
+from abupy.CoreBu.ABuFixes import six
+
+
+class ReplaceInit(object):
+    def __init__(self):
         pass
 
+    def __call__(self, cls):
+        if isinstance(cls,six.class_types):
+            init = cls.__init__
 
-class stu(object):
-    def __init__(self, name, age):
+            def wrapped(*args,**kwargs):
+                print('test wrap')
+                init(*args, **kwargs)
+
+            cls.__init__ = wrapped
+            wrapped.__name__ = '__init__'
+            wrapped.deprecated_original = init
+        return cls
+@ReplaceInit
+class School:
+    def __init__(self, name, price):
         self.name = name
-        self.age = age
+        self.price = price
 
-    def __iter__(self):
-        return self
+    def pr(self):
+        print("name={},price={}".format(self.name, self.price))
 
-    def t(self, code):
-        if code in self:
-            print('test1')
-        else:
-            print('no exist')
-c = stu('a',12)
-c.t('a')
+c = School('test',2)
+c.pr()
+
+

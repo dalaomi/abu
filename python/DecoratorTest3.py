@@ -1,5 +1,5 @@
 def Decorator(obj):
-    print('dec obj')
+    print('desc obj')
     obj.name ='test'
     def price():
         pass
