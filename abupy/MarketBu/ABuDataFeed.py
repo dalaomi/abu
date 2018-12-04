@@ -21,7 +21,7 @@ from ..CoreBu.ABuEnv import EMarketTargetType, EMarketSubType
 from ..CoreBu import ABuEnv
 from ..MarketBu import ABuNetWork
 from ..MarketBu.ABuDataBase import StockBaseMarket, SupportMixin, FuturesBaseMarket, TCBaseMarket
-from ..MarketBu.ABuDataParser import BDParser, TXParser, NTParser, SNUSParser
+from ..MarketBu.ABuDataParser import BDParser, TXParser, NTParser, SNUSParser, TuShareParser
 from ..MarketBu.ABuDataParser import SNFuturesParser, SNFuturesGBParser, HBTCParser
 from ..UtilBu import ABuStrUtil, ABuDateUtil, ABuMd5
 from ..UtilBu.ABuDTUtil import catch_error
@@ -149,6 +149,22 @@ class BDApi(StockBaseMarket, SupportMixin):
         url = BDApi.MINUTE_NET_5D % (cuid, device, str(log_id), str(self._action_id), self._symbol.value)
 
         return ABuNetWork.get(url=url, timeout=K_TIME_OUT).json()
+
+
+class TuShareApi(StockBaseMarket, SupportMixin):
+    def __init__(self, symbol):
+        super(TuShareApi, self).__init__(symbol)
+        self.data_parser_cls = TuShareParser
+
+    def kline(self, n_folds=2, start=None, end=None):
+        """
+        日k线接口
+        :param n_folds:
+        :param start:
+        :param end:
+        :return:
+        """
+        pass
 
 
 class TXApi(StockBaseMarket, SupportMixin):

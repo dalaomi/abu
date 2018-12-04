@@ -293,6 +293,9 @@ class HBTCParser(object):
             self.date = list(map(lambda date: ABuDateUtil.fmt_date(date), self.date))
 
 
+class TuShareParser(object):
+    pass
+
 class BDParser(object):
     """bd数据源解析类"""
 
