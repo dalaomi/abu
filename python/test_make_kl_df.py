@@ -8,7 +8,7 @@ from abupy.MarketBu import ABuDataFeed
     2、数据源默认为百度
     3、自定义数据源必须复写BaseMarket
 """
-ABuEnv.g_private_data_source = ABuDataFeed.TXApi
+# ABuEnv.g_private_data_source = ABuDataFeed.TXApi
 tsla_df = ABuSymbolPd.make_kl_df('usTSLA', n_folds=2)
 print(tsla_df.shape)
 # DataFrame
