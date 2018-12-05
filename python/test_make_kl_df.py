@@ -10,6 +10,7 @@ from abupy.UtilBu import *
     3、自定义数据源必须复写BaseMarket
 """
 #ABuEnv.g_private_data_source = ABuDataFeed.TXApi
+# 自定义tushare数据源
 ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
 tsla_df = ABuSymbolPd.make_kl_df('SH600281', start='2018-12-01')
 # print(tsla_df.shape)
