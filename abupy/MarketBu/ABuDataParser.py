@@ -89,9 +89,13 @@ class AbuDataParseWrap(object):
                 # 所以必须有的类属性序列设置给df的列
                 warp_self.df[col] = getattr(warp_self, col)
 
-            # 从收盘价格序列shift出昨收价格序列
-            warp_self.df['pre_close'] = warp_self.df['close'].shift(1)
-            warp_self.df['pre_close'].fillna(warp_self.df['open'], axis=0, inplace=True)
+            # 如果存在则直接使用，否则从收盘价格序列shift出昨收价格序列
+            if hasattr(warp_self, "pre_close"):
+                warp_self.df["pre_close"] = getattr(warp_self, "pre_close")
+            else:
+                warp_self.df['pre_close'] = warp_self.df['close'].shift(1)
+                warp_self.df['pre_close'].fillna(warp_self.df['open'], axis=0, inplace=True)
+            warp_self.df['pre_close'] = warp_self.df['pre_close'].astype(float)
             # 添加日期int列
             warp_self.df['date'] = warp_self.df['date'].apply(lambda x: ABuDateUtil.date_str_to_int(str(x)))
             # 添加周几列date_week，值为0-4，分别代表周一到周五
@@ -104,16 +108,18 @@ class AbuDataParseWrap(object):
             warp_self.df['low'] = warp_self.df['low'].astype(float)
             warp_self.df['open'] = warp_self.df['open'].astype(float)
             warp_self.df['volume'] = warp_self.df['volume'].astype(float)
-            warp_self.df['volume'] = warp_self.df['volume'].astype(np.int64)
+            # warp_self.df['volume'] = warp_self.df['volume'].astype(np.int64)
             warp_self.df['date'] = warp_self.df['date'].astype(int)
-            warp_self.df['pre_close'] = warp_self.df['pre_close'].astype(float)
-            # 不使用df['close'].pct_change计算
-            # noinspection PyTypeChecker
-            warp_self.df['p_change'] = np.where(warp_self.df['pre_close'] == 0, 0,
+            if hasattr(warp_self, "p_change"):
+                warp_self.df["p_change"] = getattr(warp_self, "p_change")
+            else:
+                # 不使用df['close'].pct_change计算
+                # noinspection PyTypeChecker
+                warp_self.df['p_change'] = np.where(warp_self.df['pre_close'] == 0, 0,
                                                 (warp_self.df['close'] - warp_self.df['pre_close']) / warp_self.df[
                                                     'pre_close'] * 100)
 
-            warp_self.df['p_change'] = warp_self.df['p_change'].apply(lambda x: round(x, 3))
+                warp_self.df['p_change'] = warp_self.df['p_change'].apply(lambda x: round(x, 4))
             # 给df加上name
             warp_self.df.name = symbol
 
@@ -287,14 +293,40 @@ class HBTCParser(object):
             # 收盘价格序列
             self.close = [item[4] for item in data]
             # 成交量序列
-            self.volume = [item[5] for item in data]
+            self.volume = [float(item[5]) for item in data]
 
             # 时间日期进行格式转化，转化为如2017-07-26格式字符串
             self.date = list(map(lambda date: ABuDateUtil.fmt_date(date), self.date))
 
 
+@AbuDataParseWrap()
 class TuShareParser(object):
-    pass
+    # noinspection PyUnusedLocal
+    def __init__(self, symbol, json_dict):
+        """
+        :param symbol: 请求的symbol str对象
+        :param json_dict: 请求返回的json数据
+        """
+
+        data = json_dict
+        # 为AbuDataParseWrap准备类必须的属性序列
+        if len(data) > 0:
+            # 时间日期序列
+            self.date = [item["trade_date"] for index, item in data.iterrows()]
+            # 开盘价格序列
+            self.open = [item["open"] for index, item in data.iterrows()]
+            # 最高价格序列
+            self.high = [item["high"] for index, item in data.iterrows()]
+            # 最低价格序列
+            self.low = [item["low"] for index, item in data.iterrows()]
+            # 收盘价格序列
+            self.close = [item["close"] for index, item in data.iterrows()]
+            # 成交量序列
+            self.volume = [item["vol"] for index, item in data.iterrows()]
+            self.pre_close = [item["pre_close"] for index, item in data.iterrows()]
+            self.p_change = [item["pct_chg"] for index, item in data.iterrows()]
+            # 时间日期进行格式转化，转化为如2017-07-26格式字符串
+            self.date = list(map(lambda date: ABuDateUtil.fmt_date(date), self.date))
 
 class BDParser(object):
     """bd数据源解析类"""

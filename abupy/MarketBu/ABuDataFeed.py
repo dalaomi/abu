@@ -16,6 +16,8 @@ import math
 import sqlite3 as sqlite
 
 import pandas as pd
+import tushare as ts
+from ..MarketBu.ABuSymbol import Symbol
 
 from ..CoreBu.ABuEnv import EMarketTargetType, EMarketSubType
 from ..CoreBu import ABuEnv
@@ -152,8 +154,15 @@ class BDApi(StockBaseMarket, SupportMixin):
 
 
 class TuShareApi(StockBaseMarket, SupportMixin):
+    seed = "b35e94151fe2561e2fbdc3cdde45c658623bc0deb171b67835e99ef3"
+
     def __init__(self, symbol):
-        super(TuShareApi, self).__init__(symbol)
+        """
+        :param symbol: Symbol类型对象
+        """
+        if not isinstance(symbol, Symbol):
+            raise TypeError('symbol is not type Symbol')
+        self._symbol = symbol
         self.data_parser_cls = TuShareParser
 
     def kline(self, n_folds=2, start=None, end=None):
@@ -164,7 +173,28 @@ class TuShareApi(StockBaseMarket, SupportMixin):
         :param end:
         :return:
         """
-        pass
+        sub_market = None
+        if not end:
+            end = ABuDateUtil.current_str_date()
+        # end = end.replace("-", "")
+        if not start:
+            days = ABuEnv.g_market_trade_year * n_folds + 1
+            start = ABuDateUtil.begin_date(days, end)
+        start = start.replace("-", "")
+        end = end.replace("-", "")
+        ts.set_token(TuShareApi.seed)
+        pro = ts.pro_api()
+        tushare_ts_code = self._symbol.symbol_code+"."+self._symbol.sub_market.value.upper()
+        data = pro.daily(ts_code=tushare_ts_code, start_date=start, end_date = end)
+        if data is not None:
+            kl_pd = self.data_parser_cls(self._symbol, data).df
+        else:
+            return None
+        return StockBaseMarket._fix_kline_pd(kl_pd, n_folds, start, end)
+
+    def minute(self, n_fold=5, *args, **kwargs):
+        """分钟k线接口"""
+        raise NotImplementedError('TuShareApi minute NotImplementedError!')
 
 
 class TXApi(StockBaseMarket, SupportMixin):
