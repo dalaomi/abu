@@ -1,0 +1,32 @@
+import sys, os
+sys.path.append(os.path.dirname(__file__) + os.sep + '../')
+from abupy import ABuSymbolPd
+from abupy.CoreBu import ABuEnv
+from abupy.MarketBu import ABuDataFeed
+from abupy.UtilBu import *
+from abupy.AlphaBu import *
+from abupy import AbuDoubleMaBuy
+from abupy import AbuDoubleMaSell
+import numpy as np
+import pandas as pd
+from abupy.TradeBu import *
+cash = 1000000
+# 构建对比基准
+buy_factor_dict_list = list([{'class': AbuDoubleMaBuy, 'slow': 60, 'fast': 5}])
+sell_factor_dict_list = list([{'class': AbuDoubleMaSell, 'slow': 60, 'fast': 5}])
+choice_symbols = list(["usTSLA"])
+benchmark = AbuBenchmark("usTSLA")
+capital = AbuCapital(cash, benchmark)
+orders_pd, action_pd, _ = ABuPickTimeExecute.do_symbols_with_same_factors(choice_symbols,
+                                                                          benchmark,
+                                                                          buy_factor_dict_list,
+                                                                          sell_factor_dict_list,
+                                                                          capital, show=True)
+
+
+
+# print(benchmark.kl_pd.index)
+# index_array = np.array(["x1", "x2", "x3", "x4", "x5"])
+# df2 = pd.DataFrame(np.random.randint(low=0, high=10, size=(5, 5)), columns=['a', 'b', 'c', 'd', 'e'], index=index_array)
+# print(df2)
+# print(df2.loc[df2.index[0], "a"])
