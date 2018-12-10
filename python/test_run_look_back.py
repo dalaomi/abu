@@ -30,3 +30,14 @@ orders_pd, action_pd, _ = ABuPickTimeExecute.do_symbols_with_same_factors(choice
 # df2 = pd.DataFrame(np.random.randint(low=0, high=10, size=(5, 5)), columns=['a', 'b', 'c', 'd', 'e'], index=index_array)
 # print(df2)
 # print(df2.loc[df2.index[0], "a"])
+
+
+
+# def plus(df,n):
+#     df['c'] = (df['a']+df['b'])
+#     df['d'] = (df['a']+df['b']) * n
+#     return df
+# list1 = [[1,3],[7,8],[4,5]]
+# df1 = pd.DataFrame(list1,columns=['a','b'])
+# df1 = df1.apply(plus,axis=1,args=(2,))
+# print(df1)

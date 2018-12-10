@@ -145,6 +145,8 @@ def do_symbols_with_same_factors(target_symbols, benchmark, buy_factors, sell_fa
                 # 连接每一个交易对象生成的orders_pd和action_pd
                 r_orders_pd = ret[0] if r_orders_pd is None else pd.concat([r_orders_pd, ret[0]])
                 r_action_pd = ret[1] if r_action_pd is None else pd.concat([r_action_pd, ret[1]])
+
+        print(r_orders_pd)
         return r_orders_pd, r_action_pd, r_all_fit_symbols_cnt
 
     orders_pd, action_pd, all_fit_symbols_cnt = _batch_symbols_with_same_factors(buy_factors, sell_factors)
