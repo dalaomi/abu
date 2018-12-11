@@ -17,6 +17,7 @@ sell_factor_dict_list = list([{'class': AbuDoubleMaSell, 'slow': 60, 'fast': 5}]
 choice_symbols = list(["usTSLA"])
 benchmark = AbuBenchmark("usTSLA")
 capital = AbuCapital(cash, benchmark)
+# AbuPickTimeWorker._day_task 核心逻辑
 orders_pd, action_pd, _ = ABuPickTimeExecute.do_symbols_with_same_factors(choice_symbols,
                                                                           benchmark,
                                                                           buy_factor_dict_list,

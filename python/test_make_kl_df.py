@@ -3,6 +3,7 @@ from abupy.CoreBu import ABuEnv
 from abupy.MarketBu import ABuDataFeed
 from abupy.UtilBu import *
 import pandas as pd
+import numpy as np
 # n_folds 历史数据年数
 # 单个股票获取历史数据
 """
@@ -50,16 +51,19 @@ print("------------")
 
 
 
-tsla_df = ABuSymbolPd.make_kl_df('usTSLA')
+tsla_df = ABuSymbolPd.make_kl_df('SZ000002')
 #print(type(tsla_df))
 # inplace 是否在原目标执行排序 True：是，False：否
 tsla_df.sort_values(by=['date'], inplace=True, ascending=True)
-tsla_df['MA_5'] = tsla_df['close'].rolling(window=5).mean().round(2)
-tsla_df['MA_20'] = tsla_df['close'].rolling(window=20).mean().round(2)
+tsla_df['MA_5'] = tsla_df['close'].rolling(window=5).mean()
+tsla_df['MA_20'] = tsla_df['close'].rolling(window=20).mean()
 tsla_df['MA_5_PRE'] = tsla_df['MA_5'].shift(1)
 tsla_df['MA_20_PRE'] = tsla_df['MA_20'].shift(1)
+tsla_df['BOLL_UP'] = tsla_df['MA_20'] + tsla_df['close'].rolling(window=20).std(ddof=0) * 2
+tsla_df['BOLL_DN'] = tsla_df['MA_20'] - tsla_df['close'].rolling(window=20).std(ddof=0) * 2
 
-print(tsla_df)
+
+#print(tsla_df)
 #print(tsla_df.filter(tsla_df["MA_60"]>tsla_df["MA_5"]))
 print(tsla_df[(tsla_df["MA_20"]<tsla_df["MA_5"]) & (tsla_df["MA_20_PRE"] >= tsla_df["MA_5_PRE"])])
 
