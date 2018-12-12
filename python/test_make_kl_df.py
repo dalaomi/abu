@@ -1,4 +1,5 @@
 from abupy import ABuSymbolPd
+import talib
 from abupy.CoreBu import ABuEnv
 from abupy.MarketBu import ABuDataFeed
 from abupy.UtilBu import *
@@ -13,7 +14,7 @@ import numpy as np
 """
 #ABuEnv.g_private_data_source = ABuDataFeed.TXApi
 # 自定义tushare数据源
-#ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
+ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
 #tsla_df = ABuSymbolPd.make_kl_df('SH600281', start='2018-12-01')
 # print(tsla_df.shape)
 # DataFrame
@@ -48,22 +49,38 @@ print("------------")
 
 # s = pd.Series(range(3))
 # print(s.rolling(min_periods=1,window=3,center=False).mean())
-
-
+def myMACD(price, fastperiod=12, slowperiod=26, signalperiod=9):
+    ewma12 = price.ewma(span=fastperiod)
+    ewma60 = price.ewma(span=slowperiod)
+    dif = ewma12-ewma60
+    dea = pd.ewma(dif,span=signalperiod)
+    bar = (dif-dea) #有些地方的bar = (dif-dea)*2，但是talib中MACD的计算是bar = (dif-dea)*1
+    return dif,dea,bar
 
 tsla_df = ABuSymbolPd.make_kl_df('SZ000002')
 #print(type(tsla_df))
 # inplace 是否在原目标执行排序 True：是，False：否
 tsla_df.sort_values(by=['date'], inplace=True, ascending=True)
-tsla_df['MA_5'] = tsla_df['close'].rolling(window=5).mean()
-tsla_df['MA_20'] = tsla_df['close'].rolling(window=20).mean()
-tsla_df['MA_5_PRE'] = tsla_df['MA_5'].shift(1)
-tsla_df['MA_20_PRE'] = tsla_df['MA_20'].shift(1)
-tsla_df['BOLL_UP'] = tsla_df['MA_20'] + tsla_df['close'].rolling(window=20).std(ddof=0) * 2
-tsla_df['BOLL_DN'] = tsla_df['MA_20'] - tsla_df['close'].rolling(window=20).std(ddof=0) * 2
+# tsla_df['MA_5'] = tsla_df['close'].rolling(window=5).mean()
+# tsla_df['MA_20'] = tsla_df['close'].rolling(window=20).mean()
+# tsla_df['MA_5_PRE'] = tsla_df['MA_5'].shift(1)
+# tsla_df['MA_20_PRE'] = tsla_df['MA_20'].shift(1)
+# tsla_df['BOLL_UP'] = tsla_df['MA_20'] + tsla_df['close'].rolling(window=20).std(ddof=0) * 2
+# tsla_df['BOLL_DN'] = tsla_df['MA_20'] - tsla_df['close'].rolling(window=20).std(ddof=0) * 2
+# tsla_df['EMA_12'] = talib.EMA(tsla_df['close'], 12)
+# tsla_df['EMA_26'] = talib.EMA(tsla_df['close'], 26)
+tsla_df['MACD_DIFF'] = (talib.EMA(tsla_df['close'], 12) - talib.EMA(tsla_df['close'], 26)).round(2)
+tsla_df['MACD_DEA'] = talib.EMA(tsla_df['MACD_DIFF'], 9).round(2)
+tsla_df['MACD'] = 2*(tsla_df['MACD_DIFF']-tsla_df['MACD_DEA'])
 
+
+#print("--------")
+#tsla_df['a'],tsla_df['b'],tsla_df['c'] =talib.MACD(tsla_df['close'].values, fastperiod=6, slowperiod=12, signalperiod=9)
+#tsla_df['a'],tsla_df['b'],tsla_df['c'] =myMACD(tsla_df['close'])
+#tsla_df['d'] = tsla_df['a']-tsla_df['b']
 
 #print(tsla_df)
 #print(tsla_df.filter(tsla_df["MA_60"]>tsla_df["MA_5"]))
-print(tsla_df[(tsla_df["MA_20"]<tsla_df["MA_5"]) & (tsla_df["MA_20_PRE"] >= tsla_df["MA_5_PRE"])])
+#print(tsla_df[(tsla_df["MA_20"]<tsla_df["MA_5"]) & (tsla_df["MA_20_PRE"] >= tsla_df["MA_5_PRE"])])
 
+print(tsla_df)
