@@ -7,15 +7,21 @@ from abupy.UtilBu import *
 from abupy.AlphaBu import *
 from abupy import AbuDoubleMaBuy
 from abupy import AbuDoubleMaSell
+from abupy import ABuMacdBuy,ABuMacdSell
 import numpy as np
 import pandas as pd
 from abupy.TradeBu import *
 cash = 1000000
+#ABuEnv.g_private_data_source = ABuDataFeed.TXApi
+ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
+
 # 构建对比基准
-buy_factor_dict_list = list([{'class': AbuDoubleMaBuy, 'slow': 60, 'fast': 5}])
-sell_factor_dict_list = list([{'class': AbuDoubleMaSell, 'slow': 60, 'fast': 5}])
-choice_symbols = list(["usTSLA"])
-benchmark = AbuBenchmark("usTSLA")
+#buy_factor_dict_list = list([{'class': AbuDoubleMaBuy, 'slow': 60, 'fast': 5}])
+#sell_factor_dict_list = list([{'class': AbuDoubleMaSell, 'slow': 60, 'fast': 5}])
+buy_factor_dict_list = list([{'class': ABuMacdBuy, 'xd': 60, 'fast': 5}])
+sell_factor_dict_list = list([{'class': ABuMacdSell, 'xd': 60, 'fast': 5}])
+choice_symbols = list(["SH600690"])
+benchmark = AbuBenchmark("SH600690")
 capital = AbuCapital(cash, benchmark)
 # AbuPickTimeWorker._day_task 核心逻辑
 orders_pd, action_pd, _ = ABuPickTimeExecute.do_symbols_with_same_factors(choice_symbols,

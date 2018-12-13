@@ -15,7 +15,7 @@ import pandas as pd
 from .ABuSymbol import EMarketTargetType
 from ..CoreBu.ABuFixes import six
 from ..UtilBu import ABuDateUtil
-
+import talib
 __author__ = '阿布'
 __weixin__ = 'abu_quant'
 
@@ -120,6 +120,13 @@ class AbuDataParseWrap(object):
                                                     'pre_close'] * 100)
 
                 warp_self.df['p_change'] = warp_self.df['p_change'].apply(lambda x: round(x, 4))
+
+            # 根据日期排序
+            warp_self.df.sort_values(by=['date'], inplace=True, ascending=True)
+            # 计算MACD值
+            warp_self.df['macd_diff'] = (talib.EMA(warp_self.df['close'], 12) - talib.EMA(warp_self.df['close'], 26)).round(2)
+            warp_self.df['macd_dea'] = talib.EMA(warp_self.df['macd_diff'], 9).round(2)
+            warp_self.df['macd'] = 2 * (warp_self.df['macd_diff'] - warp_self.df['macd_dea'])
             # 给df加上name
             warp_self.df.name = symbol
 

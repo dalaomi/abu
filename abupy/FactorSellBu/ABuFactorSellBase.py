@@ -197,7 +197,6 @@ class AbuFactorSellXD(AbuFactorSellBase):
         if self.today_ind >= self.kl_pd.shape[0] - 1:
             return
         orders = list(filter(lambda order: order.expect_direction in self.support_direction(), orders))
-
         # 完成为fit_day中切片周期金融时间序列数据
         self.xd_kl = self.kl_pd[self.today_ind - self.xd + 1:self.today_ind + 1]
 
