@@ -20,8 +20,8 @@ ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
 #sell_factor_dict_list = list([{'class': AbuDoubleMaSell, 'slow': 60, 'fast': 5}])
 buy_factor_dict_list = list([{'class': ABuMacdBuy, 'xd': 60, 'fast': 5}])
 sell_factor_dict_list = list([{'class': ABuMacdSell, 'xd': 60, 'fast': 5}])
-choice_symbols = list(["SH600690"])
-benchmark = AbuBenchmark("SH600690")
+choice_symbols = list(["SZ000002"])
+benchmark = AbuBenchmark("SZ000002")
 capital = AbuCapital(cash, benchmark)
 # AbuPickTimeWorker._day_task 核心逻辑
 orders_pd, action_pd, _ = ABuPickTimeExecute.do_symbols_with_same_factors(choice_symbols,
