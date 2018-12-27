@@ -51,10 +51,16 @@ print("------------")
 # print(s.rolling(min_periods=1,window=3,center=False).mean())
 
 
+def boll(x):
+    return x*2
+
 tsla_df = ABuSymbolPd.make_kl_df('SH603825', n_folds=2)
+print(type(tsla_df))
+
 #print(type(tsla_df))
 # inplace 是否在原目标执行排序 True：是，False：否
 tsla_df.sort_values(by=['date'], inplace=True, ascending=True)
+tsla_df['aaaa'] = tsla_df['close'].map(boll)
 # tsla_df['MA_5'] = tsla_df['close'].rolling(window=5).mean()
 # tsla_df['MA_20'] = tsla_df['close'].rolling(window=20).mean()
 # tsla_df['MA_5_PRE'] = tsla_df['MA_5'].shift(1)
