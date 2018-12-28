@@ -39,26 +39,15 @@ class ABuBollBuy(AbuFactorBuyXD, BuyCallMixin):
     def fit_day(self, today):
         """双均线买入择时因子，信号快线上穿慢行形成金叉做为买入信号"""
 
-        self.kl_pd['MID'] = self.kl_pd['close'].rolling(window=20).mean().round(2)
-        self.kl_pd['UPPER'] = self.kl_pd['MID'] + (self.kl_pd['close'].rolling(window=20).std(ddof=0) * 2).round(2)
-        self.kl_pd['LOWER'] = self.kl_pd['MID'] - (self.kl_pd['close'].rolling(window=20).std(ddof=0) * 2).round(2)
-        # 计算快线
-        fast_line = self.xd_kl.macd_diff
-        # 计算慢线
-        slow_line = self.xd_kl.macd_dea
-        if len(fast_line) >= 2 and len(slow_line) >= 2:
-            # 今天的快线值
-            fast_today = fast_line[-1]
-            # 昨天的快线值
-            fast_yesterday = fast_line[-2]
-            # 今天的慢线值
-            slow_today = slow_line[-1]
-            # 昨天的慢线值
-            slow_yesterday = slow_line[-2]
-
-            if slow_yesterday >= fast_yesterday and fast_today > slow_today:
-                # 快线上穿慢线, 形成买入金叉，使用了今天收盘价格，明天买入
-                return self.buy_tomorrow()
+        # self.kl_pd['MID'] = self.kl_pd['close'].rolling(window=20).mean().round(2)
+        # self.kl_pd['UPPER'] = self.kl_pd['MID'] + (self.kl_pd['close'].rolling(window=20).std(ddof=0) * 2).round(2)
+        # self.kl_pd['LOWER'] = self.kl_pd['MID'] - (self.kl_pd['close'].rolling(window=20).std(ddof=0) * 2).round(2)
+        p = today.close
+        MID = today.MID
+        UPPER = today.UPPER
+        LOWER = today.LOWER
+        if p>LOWER:
+            return self.buy_tomorrow()
 
     """可以选择是否覆盖AbuFactorBuyXD中的buy_tomorrow来增大交易频率，默认基类中self.skip_days = self.xd降低了频率"""
     # def buy_tomorrow(self):

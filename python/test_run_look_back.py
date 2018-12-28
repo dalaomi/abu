@@ -7,7 +7,7 @@ from abupy.UtilBu import *
 from abupy.AlphaBu import *
 from abupy import AbuDoubleMaBuy
 from abupy import AbuDoubleMaSell
-from abupy import ABuMacdBuy,ABuMacdSell
+from abupy import ABuBollBuy,ABuBollSell
 import numpy as np
 import pandas as pd
 from abupy.TradeBu import *
@@ -19,9 +19,9 @@ ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
 #buy_factor_dict_list = list([{'class': AbuDoubleMaBuy, 'slow': 60, 'fast': 5}])
 #sell_factor_dict_list = list([{'class': AbuDoubleMaSell, 'slow': 60, 'fast': 5}])
 # 买入策略
-buy_factor_dict_list = list([{'class': ABuMacdBuy, 'xd': 60, 'fast': 5}])
+buy_factor_dict_list = list([{'class': ABuBollBuy, 'xd': 60, 'fast': 5}])
 # 卖出
-sell_factor_dict_list = list([{'class': ABuMacdSell, 'xd': 60, 'fast': 5}])
+sell_factor_dict_list = list([{'class': ABuBollSell, 'xd': 60, 'fast': 5}])
 choice_symbols = list(["SZ000002"])
 benchmark = AbuBenchmark("SZ000002")
 capital = AbuCapital(cash, benchmark)
