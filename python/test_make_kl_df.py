@@ -51,16 +51,23 @@ print("------------")
 # print(s.rolling(min_periods=1,window=3,center=False).mean())
 
 
-def boll(x):
-    return x*2
+def boll(df):
+    df['MID'] = df['close'].rolling(window=20).mean().round(2)
+    df['UPPER'] = df['MID'] + (df['close'].rolling(window=20).std(ddof=0) * 2).round(2)
+    df['LOWER'] = df['MID'] - (df['close'].rolling(window=20).std(ddof=0) * 2).round(2)
 
-tsla_df = ABuSymbolPd.make_kl_df('SH603825', n_folds=2)
+ABuEnv.reg_indicator('name', boll, '1d', 200)
+
+tsla_df = ABuSymbolPd.make_kl_df('SZ000002', n_folds=2)
+CLOSE = tsla_df['close']
 print(type(tsla_df))
 
 #print(type(tsla_df))
 # inplace 是否在原目标执行排序 True：是，False：否
 tsla_df.sort_values(by=['date'], inplace=True, ascending=True)
-tsla_df['aaaa'] = tsla_df['close'].map(boll)
+# tsla_df['MID'] = tsla_df['close'].rolling(window=20).mean().round(2)
+# tsla_df['UPPER'] = tsla_df['MID'] + (tsla_df['close'].rolling(window=20).std(ddof=0)*2).round(2)
+# tsla_df['LOWER'] = tsla_df['MID'] - (tsla_df['close'].rolling(window=20).std(ddof=0)*2).round(2)
 # tsla_df['MA_5'] = tsla_df['close'].rolling(window=5).mean()
 # tsla_df['MA_20'] = tsla_df['close'].rolling(window=20).mean()
 # tsla_df['MA_5_PRE'] = tsla_df['MA_5'].shift(1)

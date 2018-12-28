@@ -8,6 +8,7 @@ from .ABuFactorBuyDemo import AbuFactorBuyBreakReocrdHitDemo, AbuFactorBuyBreakH
 from .ABuFactorBuyDM import AbuDoubleMaBuy
 from .ABuFactorBuyTrend import AbuUpDownTrend, AbuDownUpTrend, AbuUpDownGolden
 from .ABuMacdBuy import ABuMacdBuy
+from .ABuBollBuy import ABuBollBuy
 __all__ = [
     'AbuFactorBuyBase',
     'AbuFactorBuyXD',
@@ -27,5 +28,6 @@ __all__ = [
     'AbuUpDownTrend',
     'AbuDownUpTrend',
     'AbuUpDownGolden',
-    'ABuMacdBuy'
+    'ABuMacdBuy',
+    'ABuBollBuy'
 ]

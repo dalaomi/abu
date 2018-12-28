@@ -15,6 +15,7 @@ import pandas as pd
 from .ABuSymbol import EMarketTargetType
 from ..CoreBu.ABuFixes import six
 from ..UtilBu import ABuDateUtil
+from ..CoreBu import ABuEnv
 import talib
 __author__ = '阿布'
 __weixin__ = 'abu_quant'
@@ -129,6 +130,10 @@ class AbuDataParseWrap(object):
             warp_self.df['macd'] = 2 * (warp_self.df['macd_diff'] - warp_self.df['macd_dea'])
             # 给df加上name
             warp_self.df.name = symbol
+
+            if ABuEnv.g_indicator:
+                for v in ABuEnv.g_indicator.values():
+                    v.func(warp_self.df)
 
 
 @AbuDataParseWrap()
