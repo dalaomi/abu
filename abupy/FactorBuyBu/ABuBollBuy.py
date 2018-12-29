@@ -39,14 +39,20 @@ class ABuBollBuy(AbuFactorBuyXD, BuyCallMixin):
     def fit_day(self, today):
         """双均线买入择时因子，信号快线上穿慢行形成金叉做为买入信号"""
 
-        # self.kl_pd['MID'] = self.kl_pd['close'].rolling(window=20).mean().round(2)
-        # self.kl_pd['UPPER'] = self.kl_pd['MID'] + (self.kl_pd['close'].rolling(window=20).std(ddof=0) * 2).round(2)
-        # self.kl_pd['LOWER'] = self.kl_pd['MID'] - (self.kl_pd['close'].rolling(window=20).std(ddof=0) * 2).round(2)
+        # 为fit_day中截取昨天
+        yesterday = self.kl_pd.iloc[self.today_ind - 1]
+        # 为fit_day中截取前天
+        bf_yesterday = self.kl_pd.iloc[self.today_ind - 2]
         p = today.close
+        p_yesterday = yesterday.close
+        l_yesterday = yesterday.low
+        lower_yesterday = yesterday.LOWER
+        # print(today.date, l_yesterday, p)
         MID = today.MID
         UPPER = today.UPPER
         LOWER = today.LOWER
-        if p>LOWER:
+
+        if l_yesterday <= lower_yesterday and p > LOWER:
             return self.buy_tomorrow()
 
     """可以选择是否覆盖AbuFactorBuyXD中的buy_tomorrow来增大交易频率，默认基类中self.skip_days = self.xd降低了频率"""

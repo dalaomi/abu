@@ -14,6 +14,12 @@ from abupy.TradeBu import *
 cash = 1000000
 #ABuEnv.g_private_data_source = ABuDataFeed.TXApi
 ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
+def boll(df):
+    df['MID'] = df['close'].rolling(window=20).mean().round(2)
+    df['UPPER'] = df['MID'] + (df['close'].rolling(window=20).std(ddof=0) * 2).round(2)
+    df['LOWER'] = df['MID'] - (df['close'].rolling(window=20).std(ddof=0) * 2).round(2)
+
+ABuEnv.reg_indicator('name', boll, '1d', 200)
 
 # 构建对比基准
 #buy_factor_dict_list = list([{'class': AbuDoubleMaBuy, 'slow': 60, 'fast': 5}])
@@ -22,8 +28,9 @@ ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
 buy_factor_dict_list = list([{'class': ABuBollBuy, 'xd': 60, 'fast': 5}])
 # 卖出
 sell_factor_dict_list = list([{'class': ABuBollSell, 'xd': 60, 'fast': 5}])
-choice_symbols = list(["SZ000002"])
-benchmark = AbuBenchmark("SZ000002")
+symbols = "SH600340"
+choice_symbols = list([symbols])
+benchmark = AbuBenchmark(symbols, n_folds=3)
 capital = AbuCapital(cash, benchmark)
 # AbuPickTimeWorker._day_task 核心逻辑
 orders_pd, action_pd, _ = ABuPickTimeExecute.do_symbols_with_same_factors(choice_symbols,

@@ -38,17 +38,17 @@ class ABuBollSell(AbuFactorSellXD):
         """
 
         p = today.close
+        up = today.high
         MID = today.MID
         UPPER = today.UPPER
         LOWER = today.LOWER
-        print(p, MID)
         for order in orders:
             if order.expect_direction == 1 \
-                    and p >= MID:
+                    and up >= UPPER:
                 # call方向：快线下穿慢线线形成死叉，做为卖出信号
-                self.sell_tomorrow(order)
+                self.sell_today(order)
             elif order.expect_direction == -1 \
-                    and p >= MID:
+                    and up >= UPPER:
                 # put方向：快线上穿慢线做为卖出信号
-                self.sell_tomorrow(order)
+                self.sell_today(order)
 

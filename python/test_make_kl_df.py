@@ -58,7 +58,7 @@ def boll(df):
 
 ABuEnv.reg_indicator('name', boll, '1d', 200)
 
-tsla_df = ABuSymbolPd.make_kl_df('SZ000002', n_folds=2)
+tsla_df = ABuSymbolPd.make_kl_df('SH601318', n_folds=3)
 CLOSE = tsla_df['close']
 print(type(tsla_df))
 
