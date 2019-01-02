@@ -28,7 +28,7 @@ ABuEnv.reg_indicator('name', boll, '1d', 200)
 buy_factor_dict_list = list([{'class': ABuBollBuy, 'xd': 60, 'fast': 5}])
 # 卖出
 sell_factor_dict_list = list([{'class': ABuBollSell, 'xd': 60, 'fast': 5}])
-symbols = "SH600340"
+symbols = "SZ000651"
 choice_symbols = list([symbols])
 benchmark = AbuBenchmark(symbols, n_folds=3)
 capital = AbuCapital(cash, benchmark)
