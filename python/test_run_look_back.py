@@ -11,7 +11,7 @@ from abupy import ABuBollBuy,ABuBollSell
 import numpy as np
 import pandas as pd
 from abupy.TradeBu import *
-cash = 1000000
+cash = 10000000
 #ABuEnv.g_private_data_source = ABuDataFeed.TXApi
 ABuEnv.g_private_data_source = ABuDataFeed.TuShareApi
 def boll(df):

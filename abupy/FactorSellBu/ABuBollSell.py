@@ -36,7 +36,12 @@ class ABuBollSell(AbuFactorSellXD):
             call方向：快线下穿慢线形成死叉，做为卖出信号
             put方向： 快线上穿慢线做为卖出信号
         """
-
+        # # 计算快线
+        # fast_line = self.xd_kl.macd_diff
+        # # 计算慢线
+        # slow_line = self.xd_kl.macd_dea
+        # 为fit_day中截取昨天
+        yesterday = self.kl_pd.iloc[self.today_ind - 1]
         p = today.close
         up = today.high
         MID = today.MID
