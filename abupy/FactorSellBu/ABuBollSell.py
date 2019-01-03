@@ -44,16 +44,19 @@ class ABuBollSell(AbuFactorSellXD):
         yesterday = self.kl_pd.iloc[self.today_ind - 1]
         p = today.close
         up = today.high
+        macd_diff = today.macd_diff
+        macd_dea = today.macd_dea
+        open = today.open
         MID = today.MID
         UPPER = today.UPPER
         LOWER = today.LOWER
         for order in orders:
             if order.expect_direction == 1 \
-                    and up >= UPPER:
+                    and p >= UPPER:
                 # call方向：快线下穿慢线线形成死叉，做为卖出信号
                 self.sell_today(order)
             elif order.expect_direction == -1 \
-                    and up >= UPPER:
+                    and p >= UPPER:
                 # put方向：快线上穿慢线做为卖出信号
                 self.sell_today(order)
 
